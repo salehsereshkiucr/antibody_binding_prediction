@@ -121,4 +121,4 @@ def classification(classifier_type, antibody, another_antibody, encode_method='b
     acc = accuracy_score(np.argmax(y_test, axis=1), np.argmax(y_pred, axis=1))
     f1 = f1_score(np.argmax(y_test, axis=1), np.argmax(y_pred, axis=1))
     precision = precision_score(np.argmax(y_test, axis=1), np.argmax(y_pred, axis=1))
-    return acc, f1, precision, encode_mat
+    return acc, f1, precision, encode_method
