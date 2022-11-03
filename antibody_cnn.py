@@ -66,7 +66,7 @@ def classification(classifier_type, antibody, another_antibody, encode_method='b
     if encode_method == 'blosum':
         encode_mat = pd.read_csv('./samples/blosum.csv', index_col=0)
     elif encode_method == 'onehot':
-        encode_mat = pd.read_csv('samples/onehot.txt', index_col=0, sep='\t')
+        encode_mat = pd.read_csv('./samples/onehot.txt', index_col=0, sep='\t')
 
     antibody_df = all2[all2['antigen'] == antibody]
     X = convert_seqs_to_mat(list(antibody_df['padded']), encode_mat)
@@ -107,7 +107,7 @@ def classification(classifier_type, antibody, another_antibody, encode_method='b
         xx = x_train.reshape((nsamples, nx*ny))
         model.fit(xx, y_train)
         antibody_df = all2[all2['antigen'] == another_antibody]
-        X = convert_seqs_to_mat(blsm, list(antibody_df['padded']))
+        X = convert_seqs_to_mat(list(antibody_df['padded']), encode_mat)
         X = np.expand_dims(X, axis=3)
         Y = pd.to_numeric(antibody_df['enriched'], downcast='integer')
         Y = convert_binary_to_onehot(Y)
@@ -121,5 +121,4 @@ def classification(classifier_type, antibody, another_antibody, encode_method='b
     acc = accuracy_score(np.argmax(y_test, axis=1), np.argmax(y_pred, axis=1))
     f1 = f1_score(np.argmax(y_test, axis=1), np.argmax(y_pred, axis=1))
     precision = precision_score(np.argmax(y_test, axis=1), np.argmax(y_pred, axis=1))
-    recall = recall_score(np.argmax(y_test, axis=1), np.argmax(y_pred, axis=1))
-    return acc, f1, precision, recall
+    return acc, f1, precision, encode_mat
