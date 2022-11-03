@@ -66,7 +66,7 @@ def classification(classifier_type, antibody, another_antibody, encode_method='b
     if encode_method == 'blosum':
         encode_mat = pd.read_csv('./samples/blosum.csv', index_col=0)
     elif encode_method == 'onehot':
-        encode_mat = pd.read_csv('./samples/onhot.txt', index_col=0, sep='\t')
+        encode_mat = pd.read_csv('samples/onehot.txt', index_col=0, sep='\t')
 
     antibody_df = all2[all2['antigen'] == antibody]
     X = convert_seqs_to_mat(list(antibody_df['padded']), encode_mat)
