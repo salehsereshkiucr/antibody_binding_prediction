@@ -4,7 +4,7 @@ import antibody_cnn as ac
 
 classifier_type = 'rf'
 antibody = 'CTLA-4'
-another_antibody = 'CTLA-4'
+another_antibody = 'PD-1'
 
 for i in range(10):
     accuracy, f1, precision, recalll = ac.classification(classifier_type, antibody, another_antibody)
@@ -18,7 +18,7 @@ for i in range(10):
 
 classifier_type = 'rf'
 antibody = 'PD-1'
-another_antibody = 'PD-1'
+another_antibody = 'CTLA-4'
 
 for i in range(10):
     accuracy, f1, precision, recalll = ac.classification(classifier_type, antibody, another_antibody)
