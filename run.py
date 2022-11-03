@@ -3,8 +3,8 @@ from tensorflow.python.ops.metrics_impl import recall
 import antibody_cnn as ac
 
 classifier_type = 'cnn'
-antibody = 'CTLA-4'
-another_antibody = 'CTLA-4'
+antibody = 'PD-1'
+another_antibody = 'PD-1'
 
 for i in range(10):
     accuracy, f1, precision, recalll = ac.classification(classifier_type, antibody, another_antibody)
