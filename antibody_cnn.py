@@ -10,7 +10,7 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 from sklearn.ensemble import RandomForestClassifier
 
 
-def classification(classifier_type, antibody, another_antibody):
+def classification(classifier_type, antibody, another_antibody, encode_method='blosum'):
     all = pd.read_csv('./samples/all_ab_pre_post.txt', delimiter='\t')
 
     #shuffle the samples
@@ -42,31 +42,34 @@ def classification(classifier_type, antibody, another_antibody):
     all2['enriched'] = np.select(conditions, values)
     all2 = all2[all2['enriched'] != 'ambi']
 
-    def get_blosum(seq, blsm):
+    def get_encoded(seq, encode_mat):
         if len(seq) == 0:
             raise ValueError('Sequence has zero characters')
-        res = np.zeros((len(seq), len(blsm)))
+        res = np.zeros((len(seq), len(encode_mat)))
         for i, c in enumerate(seq):
-            res[i] = blsm[c]
+            res[i] = encode_mat[c]
         return res
 
-    def convert_seqs_to_mat(blsm, seqs):
+    def convert_seqs_to_mat(seqs, encode_mat):
         if len(seqs) == 0:
             raise ValueError('No sequences')
         seq_size = len(seqs[0])
         for seq in seqs:
             if len(seq) != seq_size:
                 raise ValueError('Sequences of Different Size')
-        res = np.zeros((len(seqs), seq_size, len(blsm)))
+        res = np.zeros((len(seqs), seq_size, len(encode_mat)))
         for i, seq in enumerate(seqs):
-            res[i] = get_blosum(seq, blsm)
+            res[i] = get_encoded(seq, encode_mat)
         return res
 
 
-    blsm = pd.read_csv('./samples/blosum.csv', index_col=0)
+    if encode_method == 'blosum':
+        encode_mat = pd.read_csv('./samples/blosum.csv', index_col=0)
+    elif encode_method == 'onehot':
+        encode_mat = pd.read_csv('./samples/onhot.txt', index_col=0, sep='\t')
 
     antibody_df = all2[all2['antigen'] == antibody]
-    X = convert_seqs_to_mat(blsm, list(antibody_df['padded']))
+    X = convert_seqs_to_mat(list(antibody_df['padded']), encode_mat)
     X = np.expand_dims(X, axis=3)
     Y = pd.to_numeric(antibody_df['enriched'], downcast='integer')
 
