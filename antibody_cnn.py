@@ -31,7 +31,7 @@ def classification(classifier_type, antibody, another_antibody, encode_method='b
     all2 = all2.sample(frac=1).reset_index(drop=True)
 
     #not filter the duplicate sequences
-    #all2 = all
+    all2 = all
 
     #define the binder/non biner
     #The results of this step is different from the original code for four rows. That is because of some elements with similar sequences has similar post but different pre.
