@@ -1,6 +1,6 @@
 import antibody_cnn as ac
 
-classifier_type = 'cnn'
+classifier_type = 'rf'
 antibody = 'CTLA-4'
 another_antibody = 'CTLA-4'
 
