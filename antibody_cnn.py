@@ -92,7 +92,7 @@ def classification(classifier_type, antibody, another_antibody, encode_method='b
     X = np.expand_dims(X, axis=3)
     Y = pd.to_numeric(antibody_df['enriched'], downcast='integer')
 
-
+    print(float(len(Y[Y==0]))/len(Y))
     def convert_binary_to_onehot(Y):
         res = np.zeros((Y.size, 2))
         res[np.arange(Y.size), Y] = 1
