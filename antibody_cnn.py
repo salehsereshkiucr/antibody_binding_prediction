@@ -79,7 +79,17 @@ def classification(classifier_type, antibody, another_antibody, encode_method='b
         df_p = pd.concat([df_p, df_p.sample(n=diff)])
         return pd.concat([df_p, df_n]).sample(frac=1)
 
+    def convert_binary_to_onehot(Y):
+            res = np.zeros((Y.size, 2))
+            res[np.arange(Y.size), Y] = 1
+            return res
 
+    def make_input(antibody_df):
+        X = convert_seqs_to_mat(list(antibody_df['padded']), encode_mat)
+        X = np.expand_dims(X, axis=3)
+        Y = pd.to_numeric(antibody_df['enriched'], downcast='integer')
+        Y = convert_binary_to_onehot(Y)
+        return X, Y
 
     if encode_method == 'blosum':
         encode_mat = pd.read_csv('./samples/blosum.csv', index_col=0)
@@ -87,21 +97,15 @@ def classification(classifier_type, antibody, another_antibody, encode_method='b
         encode_mat = pd.read_csv('./samples/onehot.txt', index_col=0, sep='\t')
 
     antibody_df = all2[all2['antigen'] == antibody]
-    antibody_df = make_balanced_df(antibody_df)
-    X = convert_seqs_to_mat(list(antibody_df['padded']), encode_mat)
-    X = np.expand_dims(X, axis=3)
-    Y = pd.to_numeric(antibody_df['enriched'], downcast='integer')
+    antibody_df_tr = antibody_df.sample(frac=1).iloc[:int(len(antibody_df)*0.8), :]
+    antibody_df_te = antibody_df.sample(frac=1).iloc[int(len(antibody_df)*0.8):, :]
 
-    print(float(len(Y[Y==0]))/len(Y))
-    def convert_binary_to_onehot(Y):
-        res = np.zeros((Y.size, 2))
-        res[np.arange(Y.size), Y] = 1
-        return res
+    antibody_df_tr = make_balanced_df(antibody_df_tr)
 
+    x_train, y_train = make_input(antibody_df_tr)
+    x_test, y_test = make_input(antibody_df_te)
 
-    Y = convert_binary_to_onehot(Y)
-
-    x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=32)
+    #x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=32)
 
     if classifier_type == 'cnn':
         model = Sequential()
