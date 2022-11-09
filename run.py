@@ -14,7 +14,7 @@ for i in range(10):
                                                      str(f1), str(precision), str(encode_mat)))
 
 
-classifier_type = 'cnn'
+classifier_type = 'rf'
 antibody = 'PD-1'
 another_antibody = 'PD-1'
 
