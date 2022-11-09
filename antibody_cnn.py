@@ -65,6 +65,21 @@ def classification(classifier_type, antibody, another_antibody, encode_method='b
             res[i] = get_encoded(seq, encode_mat)
         return res
 
+    def make_balanced_df(antibody_df):
+        df_p = antibody_df[antibody_df['enriched'] == '1']
+        df_n = antibody_df[antibody_df['enriched'] == '0']
+        ratio = float(len(df_n))/len(df_p)
+        if ratio < 1:
+            raise ValueError('dataset has more positive cases than negative!')
+        dups = []
+        for i in range(int(ratio)):
+            dups.append(df_p.copy())
+        df_p = pd.concat(dups)
+        diff = len(df_n) - len(df_p)
+        df_p = pd.concat([df_p, df_p.sample(n=diff)])
+        return pd.concat([df_p, df_n]).sample(frac=1)
+
+
 
     if encode_method == 'blosum':
         encode_mat = pd.read_csv('./samples/blosum.csv', index_col=0)
@@ -72,6 +87,7 @@ def classification(classifier_type, antibody, another_antibody, encode_method='b
         encode_mat = pd.read_csv('./samples/onehot.txt', index_col=0, sep='\t')
 
     antibody_df = all2[all2['antigen'] == antibody]
+    antibody_df = make_balanced_df(antibody_df)
     X = convert_seqs_to_mat(list(antibody_df['padded']), encode_mat)
     X = np.expand_dims(X, axis=3)
     Y = pd.to_numeric(antibody_df['enriched'], downcast='integer')
