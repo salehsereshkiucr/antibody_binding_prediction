@@ -101,6 +101,7 @@ def classification(classifier_type, antibody, another_antibody, encode_method='b
     antibody_df_te = antibody_df.sample(frac=1).iloc[int(len(antibody_df)*0.8):, :]
 
     antibody_df_tr = make_balanced_df(antibody_df_tr)
+    antibody_df_te = make_balanced_df(antibody_df_te)
 
     x_train, y_train = make_input(antibody_df_tr)
     x_test, y_test = make_input(antibody_df_te)
