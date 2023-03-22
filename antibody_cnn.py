@@ -8,6 +8,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Reshape
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, f1_score, precision_score, recall_score
 from sklearn.ensemble import RandomForestClassifier
+from sklearn import tree
 
 
 def classification(classifier_type, antibody, another_antibody, encode_method='blosum'):
@@ -22,7 +23,9 @@ def classification(classifier_type, antibody, another_antibody, encode_method='b
 
     all['paddedk'] = all["CDR3K"].str.pad(width=max_k, fillchar="-", side="right")
     all['paddedh'] = all["CDR3H"].str.pad(width=max_h, fillchar="-", side="right")
-    all['padded'] = all['paddedk'] + all['paddedh']
+    #all['padded'] = all['paddedk'] + all['paddedh']
+    all['padded'] = all['paddedk']
+    #all['padded'] = all['paddedh']
 
     #filter the duplicate sequences,
     all2 = all.sort_values("post", ascending=False)
@@ -100,11 +103,15 @@ def classification(classifier_type, antibody, another_antibody, encode_method='b
     antibody_df_tr = antibody_df.sample(frac=1).iloc[:int(len(antibody_df)*0.8), :]
     antibody_df_te = antibody_df.sample(frac=1).iloc[int(len(antibody_df)*0.8):, :]
 
-    antibody_df_tr = make_balanced_df(antibody_df_tr)
-    antibody_df_te = make_balanced_df(antibody_df_te)
+    #if balanced dataset is neeeded
+    #antibody_df_tr = make_balanced_df(antibody_df_tr)
+    #antibody_df_te = make_balanced_df(antibody_df_te)
 
     x_train, y_train = make_input(antibody_df_tr)
     x_test, y_test = make_input(antibody_df_te)
+
+    # X_ = np.concatenate([x_train, x_train])
+    # Y_ = np.concatenate([y_train, y_train])
 
     #x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=32)
 
@@ -138,6 +145,10 @@ def classification(classifier_type, antibody, another_antibody, encode_method='b
         x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=32)
         nsamples, nx, ny, nz = x_test.shape
         x_test = x_test.reshape((nsamples, nx*ny))
+    elif classifier_type == 'dtree':
+        model = tree.DecisionTreeClassifier()
+        model.fit(np.reshape(x_train, (x_train.shape[0], x_train.shape[1] * x_train.shape[2])), y_train)
+        x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1] * x_test.shape[2]))
 
     y_pred = model.predict(x_test)
 
