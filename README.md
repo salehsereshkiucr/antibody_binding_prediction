@@ -2,11 +2,11 @@
 
 This repository contains Python code for deeper analysis of the results of the paper "Predicting antibody binders and generating synthetic antibodies using deep learning".
 
-We implemented models using CNN (Convolutional Neural Networks), Random Forest, and Decision Trees to predict the antibody binding for CTLA-4 and PD-1.
+We implemented models using CNN (Convolutional Neural Networks), Random Forest, and Decision Trees to predict the antibody binding for CTLA-4 and PD-1. We also investigated the effect of encoding, used onehot-encoding and BLOSUM. Our result showed that the prediction accuracy is almost consistent regardless of the choice of classification model and encoding.
 
 ## Results
 
-Here are some results from our implementation:
+Here are some of the results from our implementation:
 
 ![Result Image 1](./results/PD-1-ROC-regenerate.png)
 ![Result Image 2](./results/PD-1-probability-regenerate.png)
