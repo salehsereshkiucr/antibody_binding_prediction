@@ -8,9 +8,9 @@ We implemented models using CNN (Convolutional Neural Networks), Random Forest, 
 
 Here are some results from our implementation:
 
-![Result Image 1](path/to/image1.jpg)
-![Result Image 2](path/to/image2.jpg)
-![Result Image 1](path/to/image1.jpg)
-![Result Image 2](path/to/image2.jpg)
-![Result Image 1](path/to/image1.jpg)
-![Result Image 2](path/to/image2.jpg)
+![Result Image 1](result/to/PD-1-ROC-regenerate.pdf)
+![Result Image 2](path/to/PD-1-probability-regenerate.pdf)
+![Result Image 1](path/to/PD-1-regenerate.pdf)
+![Result Image 1](result/to/CTLA-4-ROC-regenerate.pdf)
+![Result Image 2](path/to/CTLA-4-probability-regenerate.pdf)
+![Result Image 1](path/to/CTLA-4-regenerate.pdf)
